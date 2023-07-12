@@ -106,17 +106,32 @@ let
     };
 
     toolchain = "nightly-${rust_nightly_version}-${rust_target}";
+    dontPatchELF = true;
 
-    nativeBuildInputs = [ ] ++ (lib.optionals (!stdenv.isDarwin) [
-      autoPatchelfHook
-    ]);
+    nativeBuildInputs =
+      [
+        pkgs.makeWrapper
+      ]
+      ++ (lib.optionals stdenv.isLinux [ autoPatchelfHook ]);
 
-    buildInputs = [
-      toolchain
-      pkgs.gcc-unwrapped
-    ] ++ (lib.optionals (!stdenv.isDarwin) [
-      pkgs.glibc
-    ]);
+    buildInputs =
+      [
+        # pkgs.gcc-unwrapped
+        pkgs.zlib
+        stdenv.cc.cc.lib
+        toolchain
+      ]
+      # ++ (lib.optionals stdenv.isLinux [ pkgs.glibc ])
+    ;
+
+    runtimeDependencies =
+      [
+        # pkgs.gcc-unwrapped
+        pkgs.zlib
+        stdenv.cc.cc.lib
+      ]
+      # ++ (lib.optionals stdenv.isLinux [ pkgs.glibc ])
+    ;
 
     buildPhase = ''
       # Ensure that the toolchain matches the one used to build kani
@@ -126,10 +141,14 @@ let
         exit 1
       fi
 
-      mkdir -p $out/kani-${version}
-      cp -r --reflink=auto ./* $out/kani-${version}/
-      ln -s ${toolchain} $out/kani-${version}/toolchain
-      ln -s ${cbmc-viewer} $out/kani-${version}/pyroot
+      bundle_dir="$out/kani-${version}"
+      mkdir -p $bundle_dir
+      cp -r --reflink=auto ./* $bundle_dir/
+      ln -s ${toolchain} $bundle_dir/toolchain
+      ln -s ${cbmc-viewer} $bundle_dir/pyroot
+
+      wrapProgram $bundle_dir/bin/kani-compiler  \
+        --prefix LD_LIBRARY_PATH : "${pkgs.zlib}/lib"
     '';
   };
 in

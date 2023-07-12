@@ -67,6 +67,17 @@
             kani failure.rs || exit 0
             exit 1
           '';
+
+        checks.cargoSuccess = pkgs.runCommand "kani-check-cargo-success"
+          {
+            buildInputs = [ packages.kani packages.kani.toolchain ];
+          }
+          ''
+            mkdir -p $out
+            cd $out
+            cp -r ${./test}/test-cargo/* ./
+            cargo kani
+          '';
       });
 }
 
