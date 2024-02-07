@@ -17,14 +17,10 @@ let
 
   rust_targets = {
     "x86_64-linux" = "x86_64-unknown-linux-gnu";
-    "x86_64-darwin" = "x86_64-apple-darwin";
-    "aarch64-darwin" = "aarch64-apple-darwin";
   };
 
   bundle_hashes = {
     "x86_64-linux" = "sha256:0b8xan1f09h7z5byb8z68n0x6fj5k64hwpz5yhsqg5cr7sfd0b4c";
-    "x86_64-darwin" = "sha256:0c7fpn9fxd22166q0rkz61w72hy9di53q1q0zaa98qpki18dmg6j";
-    "aarch64-darwin" = "sha256:1c91m2skb1xp75dp2rvdxyv0znqr6g4fh8vw5q9q9g2cj8j5cr09";
   };
 
 
@@ -111,8 +107,8 @@ let
     nativeBuildInputs =
       [
         pkgs.makeWrapper
-      ]
-      ++ (lib.optionals stdenv.isLinux [ autoPatchelfHook ]);
+        autoPatchelfHook
+      ];
 
     buildInputs =
       [
@@ -120,18 +116,14 @@ let
         pkgs.zlib
         stdenv.cc.cc.lib
         toolchain
-      ]
-      # ++ (lib.optionals stdenv.isLinux [ pkgs.glibc ])
-    ;
+      ];
 
     runtimeDependencies =
       [
         # pkgs.gcc-unwrapped
         pkgs.zlib
         stdenv.cc.cc.lib
-      ]
-      # ++ (lib.optionals stdenv.isLinux [ pkgs.glibc ])
-    ;
+      ];
 
     buildPhase = ''
       # Ensure that the toolchain matches the one used to build kani

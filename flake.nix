@@ -21,7 +21,7 @@
 
   outputs = { self, crane, nixpkgs, flake-utils, rust-overlay }:
     let
-      systems = [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ];
+      systems = [ "x86_64-linux" ];
     in
     flake-utils.lib.eachSystem systems (system:
       let
@@ -75,8 +75,20 @@
           ''
             mkdir -p $out
             cd $out
-            cp -r ${./test}/test-cargo/* ./
+            cp -r ${./test}/test-cargo-success/* ./
             cargo kani
+          '';
+
+        checks.cargoFailure = pkgs.runCommand "kani-check-cargo-failure"
+          {
+            buildInputs = [ packages.kani packages.kani.toolchain ];
+          }
+          ''
+            mkdir -p $out
+            cd $out
+            cp -r ${./test}/test-cargo-failure/* ./
+            cargo kani || exit 0
+            exit 1
           '';
       });
 }
