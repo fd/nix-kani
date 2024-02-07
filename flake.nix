@@ -34,14 +34,9 @@
         };
         packages.cbmc-viewer = pkgs.callPackage ./cbmc-viewer.nix { };
 
-        checks.version = pkgs.runCommand "kani-check-version"
-          {
-            buildInputs = [ packages.kani ];
-          }
-          ''
-            kani --version
-            mkdir -p $out
-          '';
+        checks.version = pkgs.testers.testVersion {
+          package = packages.kani;
+        };
 
         checks.success = pkgs.runCommand "kani-check-success"
           {
