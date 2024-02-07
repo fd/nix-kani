@@ -2,7 +2,7 @@
   description = "Kani is a Rust library for symbolic execution of Rust programs";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     flake-utils.url = "github:numtide/flake-utils";
 
     rust-overlay = {
