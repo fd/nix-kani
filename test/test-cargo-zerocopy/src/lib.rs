@@ -1,7 +1,7 @@
 use zerocopy::*;
 
 #[derive(zerocopy_derive::FromZeroes)]
-struct T(u64);
+pub struct T(u64);
 
 fn estimate_size(x: u32) -> u32 {
     assert!(x < 4096);
