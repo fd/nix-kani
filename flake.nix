@@ -63,7 +63,7 @@
 
         checks.cargoSuccess = pkgs.runCommand "kani-check-cargo-success"
           {
-            buildInputs = [ packages.kani packages.kani.toolchain ];
+            buildInputs = [ packages.kani pkgs.rust-bin.stable.latest.default ];
           }
           ''
             mkdir -p $out
@@ -74,7 +74,7 @@
 
         checks.cargoFailure = pkgs.runCommand "kani-check-cargo-failure"
           {
-            buildInputs = [ packages.kani packages.kani.toolchain ];
+            buildInputs = [ packages.kani pkgs.rust-bin.stable.latest.default ];
           }
           ''
             mkdir -p $out
