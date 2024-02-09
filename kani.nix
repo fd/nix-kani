@@ -70,7 +70,6 @@ let
         set -e
         # pop of arg1
         shift
-        export PATH="@BIN_HIDDEN@:${toolchain}/bin:$PATH"
         unset CARGO RUSTC RUSTC_WRAPPER RUSTC_WORKSPACE_WRAPPER CARGO_RUSTC_CURRENT_DIR
         exec cargo kani "$@"
       '';
@@ -81,19 +80,20 @@ let
           --set KANI_HOME ${kani-bundle} \
           --prefix PATH : "${pkgs.universal-ctags}/bin" \
           --prefix PATH : "${pkgs.gcc}/bin" \
-          --prefix PATH : "${kani-bundle}/kani-${version}/bin"
+          --prefix PATH : "${kani-bundle}/kani-${version}/bin" \
+          --prefix PATH : "${toolchain}/bin"
 
         mkdir -p $out/bin-hidden
         mv $out/bin/cargo-kani $out/bin-hidden/cargo-kani
-        wrapProgram $out/bin-hidden/cargo-kani \
+        
+        cp $cargoKaniWrapper $out/bin/cargo-kani
+        wrapProgram $out/bin/cargo-kani \
           --set KANI_HOME ${kani-bundle} \
           --prefix PATH : "${pkgs.universal-ctags}/bin" \
           --prefix PATH : "${pkgs.gcc}/bin" \
-          --prefix PATH : "${kani-bundle}/kani-${version}/bin"
-        
-        cp $cargoKaniWrapper $out/bin/cargo-kani
-        substituteInPlace $out/bin/cargo-kani \
-          --replace '@BIN_HIDDEN@' "$out/bin-hidden"
+          --prefix PATH : "$out/bin-hidden" \
+          --prefix PATH : "${kani-bundle}/kani-${version}/bin" \
+          --prefix PATH : "${toolchain}/bin"
       '';
   });
 
