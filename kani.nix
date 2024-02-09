@@ -71,7 +71,6 @@ let
         # pop of arg1
         shift
         unset CARGO RUSTC RUSTC_WRAPPER RUSTC_WORKSPACE_WRAPPER CARGO_RUSTC_CURRENT_DIR
-        env
         exec cargo kani "$@"
       '';
 
