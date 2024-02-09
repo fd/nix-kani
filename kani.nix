@@ -71,6 +71,7 @@ let
         # pop of arg1
         shift
         unset CARGO RUSTC RUSTC_WRAPPER RUSTC_WORKSPACE_WRAPPER CARGO_RUSTC_CURRENT_DIR
+        env
         exec cargo kani "$@"
       '';
 
@@ -85,7 +86,7 @@ let
 
         mkdir -p $out/bin-hidden
         mv $out/bin/cargo-kani $out/bin-hidden/cargo-kani
-        
+
         cp $cargoKaniWrapper $out/bin/cargo-kani
         wrapProgram $out/bin/cargo-kani \
           --set KANI_HOME ${kani-bundle} \
