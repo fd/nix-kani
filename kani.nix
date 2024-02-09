@@ -11,10 +11,10 @@ let
   pname = "kani";
   rust_target = rust_targets.${pkgs.system};
 
-  version = "0.33.0";
-  rust_nightly_version = "2023-07-01";
-  hash = "sha256-s04CFgytNHAg1UVn7Y8oPvY4fgGjAC9tB3vlrCn4Mpk=";
-  dependenciesHash = "sha256-/QS2qZ7aWGxeXSlSyrc28do/UHqHXv4/YtF2TwHjxQg=";
+  version = "0.40.0";
+  rust_nightly_version = "2023-10-31";
+  hash = "sha256-E3rR5TCPJkDSGdVwZtCR+DJvbB2nzZ5FDE/BcDYBxJ0=";
+  dependenciesHash = "sha256-VcRKJC2i5sviSu6xd5pqTDY6Rv2E4lLCp4yat41hVVU=";
 
   rust_targets = {
     "x86_64-linux" = "x86_64-unknown-linux-gnu";
